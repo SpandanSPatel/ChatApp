@@ -11,5 +11,8 @@ public class Constants {
 
     public static final String STATUS = "STATUS";
     public static final String AUTH = "AUTH";
+    public static final String SWITCH = "SWITCH";
+    public static final String USER_LIST = "USER_LIST";
+
 
 }

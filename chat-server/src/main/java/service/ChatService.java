@@ -1,6 +1,7 @@
 package service;
 
 import server.ClientHandler;
+import util.JsonUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,6 +19,7 @@ import org.bson.Document;
 
 import database.MongoService;
 import model.Message;
+import util.Constants;
 
 public class ChatService {
     private static final ConcurrentHashMap<String, ClientHandler> clients = new ConcurrentHashMap<>();
@@ -81,4 +83,25 @@ public class ChatService {
         return messages;
     }
 
+    public static void broadcastUserList() {
+        try {
+            List<String> users = new ArrayList<>(clients.keySet());
+
+            Message msg = new Message(
+                    Constants.USER_LIST,
+                    "SERVER",
+                    "ALL",
+                    JsonUtil.toJson(users),
+                    System.currentTimeMillis());
+
+            String json = JsonUtil.toJson(msg);
+
+            for (ClientHandler ch : clients.values()) {
+                ch.sendMessage(json);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }

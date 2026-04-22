@@ -79,27 +79,34 @@ public class ClientHandler implements Runnable {
 
                     this.username = username;
                     ChatService.addClient(username, this);
+                    ChatService.broadcastUserList();
 
                     System.out.println(username + " Logged in");
 
                     break;
                 }
             }
-
-            String receiver = dis.readUTF();
-
-            List<Message> history = ChatService.getLastMessages(this.username, receiver);
-
-            for (Message m : history) {
-                dos.writeUTF(JsonUtil.toJson(m));
-            }
-            dos.writeUTF("END_HISTORY");
-
+            String receiver;
 
             while (true) {
                 String json = dis.readUTF();
 
                 Message msg = JsonUtil.fromJson(json, Message.class);
+
+                if (msg.getType().equals("SWITCH")) {
+
+                    receiver = msg.getReceiver();
+
+                    List<Message> history = ChatService.getLastMessages(username, receiver);
+
+                    for (Message m : history) {
+                        dos.writeUTF(JsonUtil.toJson(m));
+                    }
+
+                    dos.writeUTF("END_HISTORY");
+
+                    continue;
+                }
 
                 ChatService.saveMessage(msg);
 
@@ -130,6 +137,7 @@ public class ClientHandler implements Runnable {
             try {
                 if (username != null) {
                     ChatService.removeClient(username);
+                    ChatService.broadcastUserList();
                 }
                 socket.close();
             } catch (Exception ex) {
