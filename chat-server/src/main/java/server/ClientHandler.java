@@ -4,10 +4,12 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
+import java.util.List;
 
 import model.*;
 import util.*;
 import service.ChatService;
+import service.AuthService;
 
 public class ClientHandler implements Runnable {
 
@@ -32,27 +34,89 @@ public class ClientHandler implements Runnable {
         try {
 
             DataInputStream dis = new DataInputStream(socket.getInputStream());
-            this.username = dis.readUTF();
+            while (true) {
 
-            System.out.println(username + " connected");
+                String authJson = dis.readUTF();
 
-            ChatService.addClient(username, this);
+                Message authMsg = JsonUtil.fromJson(authJson, Message.class);
+                String username = authMsg.getSender();
+                String password = authMsg.getContent();
+                String type = authMsg.getType();
+
+                if (username == null || username.trim().isEmpty() || password == null
+                        || password.trim().isEmpty()) {
+                    Message response = new Message(Constants.AUTH, "SERVER", "UNKNOWN", "INVALID_INPUT",
+                            System.currentTimeMillis());
+
+                    dos.writeUTF(JsonUtil.toJson(response));
+
+                    continue;
+                }
+
+                if (type.equals(Constants.LOGIN)) {
+                    if (ChatService.getClient(username) != null) {
+                        Message response = new Message(Constants.AUTH, "SERVER", username, "ALREADY_LOGGED_IN",
+                                System.currentTimeMillis());
+
+                        dos.writeUTF(JsonUtil.toJson(response));
+
+                        continue;
+                    }
+                }
+                boolean success = false;
+
+                if (type.equals(Constants.SIGNUP)) {
+                    success = AuthService.register(new model.User(username, password));
+                } else if (type.equals(Constants.LOGIN)) {
+                    success = AuthService.login(username, password);
+                }
+                Message response = new Message(Constants.AUTH, "SERVER", username, success ? "SUCCESS" : "FAIL",
+                        System.currentTimeMillis());
+
+                dos.writeUTF(JsonUtil.toJson(response));
+
+                if (success) {
+
+                    this.username = username;
+                    ChatService.addClient(username, this);
+
+                    System.out.println(username + " Logged in");
+
+                    break;
+                }
+            }
+
+            String receiver = dis.readUTF();
+
+            List<Message> history = ChatService.getLastMessages(this.username, receiver);
+
+            for (Message m : history) {
+                dos.writeUTF(JsonUtil.toJson(m));
+            }
+            dos.writeUTF("END_HISTORY");
+
 
             while (true) {
                 String json = dis.readUTF();
 
                 Message msg = JsonUtil.fromJson(json, Message.class);
-                
-                String receiver = msg.getReceiver();
+
+                ChatService.saveMessage(msg);
+
+                receiver = msg.getReceiver();
 
                 ClientHandler receiverHandler = ChatService.getClient(receiver);
 
-                if (receiverHandler!=null) {
+                if (receiverHandler != null) {
                     receiverHandler.sendMessage(json);
-                }else{
-                    System.out.println("User not online: "+ receiver);
+                } else {
+                    Message errorMsg = new Message(Constants.CHAT, "SERVER", msg.getSender(),
+                            "User not online: " + receiver, System.currentTimeMillis());
+
+                    String errorJson = JsonUtil.toJson(errorMsg);
+                    this.sendMessage(errorJson);
                 }
-                
+
                 System.out.println("Received :");
                 System.out.println("From: " + msg.getSender());
                 System.out.println("To: " + msg.getReceiver());
@@ -63,9 +127,14 @@ public class ClientHandler implements Runnable {
         } catch (Exception e) {
 
             System.out.println("Client Disconnected: " + socket.getInetAddress());
-
+            try {
+                if (username != null) {
+                    ChatService.removeClient(username);
+                }
+                socket.close();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
         }
-
     }
-
 }

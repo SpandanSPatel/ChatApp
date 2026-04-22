@@ -10,4 +10,6 @@ public class Constants {
     public static final String TYPING_STOP = "TYPING_STOP";
 
     public static final String STATUS = "STATUS";
+    public static final String AUTH = "AUTH";
+
 }

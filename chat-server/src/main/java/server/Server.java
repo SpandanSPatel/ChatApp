@@ -23,7 +23,7 @@ public class Server {
             ServerSocket serverSocket = new ServerSocket(port);
 
             System.out.println("Server started on Port: " + port);
-
+            
             while (true) {
                 Socket socket = serverSocket.accept();
                 System.out.println("New Client connected: " + socket.getInetAddress());
