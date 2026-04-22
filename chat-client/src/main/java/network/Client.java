@@ -11,7 +11,7 @@ import util.JsonUtil;
 
 import io.github.cdimascio.dotenv.Dotenv;
 
-public class Client {
+public class Client { // Class
 
     static DataOutputStream dos;
     static DataInputStream dis;
@@ -25,21 +25,21 @@ public class Client {
 
             System.out.println("Connecting to server...");
 
-            Socket socket = new Socket(ip, port);
+            Socket socket = new Socket(ip, port); // Object
 
             System.out.println("Connected to server!!");
-            dos = new DataOutputStream(socket.getOutputStream());
-            dis = new DataInputStream(socket.getInputStream());
+            dos = new DataOutputStream(socket.getOutputStream()); // Object
+            dis = new DataInputStream(socket.getInputStream()); // Object
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public void send(String msg) throws Exception {
+    public void send(String msg) throws Exception { // Abstraction
         dos.writeUTF(msg);
     }
 
-    public String receive() throws Exception {
+    public String receive() throws Exception { // Abstraction
         return dis.readUTF();
     }
 

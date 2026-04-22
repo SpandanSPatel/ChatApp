@@ -21,31 +21,31 @@ import database.MongoService;
 import model.Message;
 import util.Constants;
 
-public class ChatService {
-    private static final ConcurrentHashMap<String, ClientHandler> clients = new ConcurrentHashMap<>();
+public class ChatService { // Class
+    private static final ConcurrentHashMap<String, ClientHandler> clients = new ConcurrentHashMap<>(); // Encapsulation, Object
 
-    private static final MongoCollection<Document> messageCollection;
+    private static final MongoCollection<Document> messageCollection; // Encapsulation
 
     static {
         MongoDatabase db = MongoService.getDatabase();
         messageCollection = db.getCollection("messages");
     }
 
-    public static void addClient(String username, ClientHandler handler) {
+    public static void addClient(String username, ClientHandler handler) { // Abstraction
         clients.put(username, handler);
     }
 
-    public static void removeClient(String username) {
+    public static void removeClient(String username) { // Abstraction
         clients.remove(username);
     }
 
-    public static ClientHandler getClient(String username) {
+    public static ClientHandler getClient(String username) { // Abstraction
         return clients.get(username);
     }
 
-    public static void saveMessage(Message msg) {
+    public static void saveMessage(Message msg) { // Abstraction
 
-        Document doc = new Document("type", msg.getType())
+        Document doc = new Document("type", msg.getType()) // Object
                 .append("sender", msg.getSender())
                 .append("receiver", msg.getReceiver())
                 .append("content", msg.getContent())
@@ -54,9 +54,9 @@ public class ChatService {
         messageCollection.insertOne(doc);
     }
 
-    public static List<Message> getLastMessages(String user1, String user2) {
+    public static List<Message> getLastMessages(String user1, String user2) { // Abstraction
 
-        List<Message> messages = new ArrayList<>();
+        List<Message> messages = new ArrayList<>(); // Object
 
         FindIterable<Document> docs = messageCollection
                 .find(
@@ -71,7 +71,7 @@ public class ChatService {
                 .limit(50);
 
         for (Document doc : docs) {
-            Message msg = new Message(
+            Message msg = new Message( // Object
                     doc.getString("type"),
                     doc.getString("sender"),
                     doc.getString("receiver"),
@@ -83,11 +83,11 @@ public class ChatService {
         return messages;
     }
 
-    public static void broadcastUserList() {
+    public static void broadcastUserList() { // Abstraction
         try {
-            List<String> users = new ArrayList<>(clients.keySet());
+            List<String> users = new ArrayList<>(clients.keySet()); // Object
 
-            Message msg = new Message(
+            Message msg = new Message( // Object
                     Constants.USER_LIST,
                     "SERVER",
                     "ALL",

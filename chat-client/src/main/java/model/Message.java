@@ -1,11 +1,11 @@
 package model;
-public class Message {
+public class Message { // Class
 
-    private String type;
-    private String sender;
-    private String receiver;
-    private String content;
-    private long timestamp;
+    private String type; // Encapsulation
+    private String sender; // Encapsulation
+    private String receiver; // Encapsulation
+    private String content; // Encapsulation
+    private long timestamp; // Encapsulation
     public Message(){}
     public Message(String type, String sender, String receiver, String content, long timestamp){
         this.type = type;
@@ -14,34 +14,34 @@ public class Message {
         this.content = content;
         this.timestamp = timestamp;
     }
-    public String getType() {
+    public String getType() { // Encapsulation
         return type;
     }
-    public void setType(String type) {
+    public void setType(String type) { // Encapsulation
         this.type = type;
     }
-    public String getSender() {
+    public String getSender() { // Encapsulation
         return sender;
     }
-    public void setSender(String sender) {
+    public void setSender(String sender) { // Encapsulation
         this.sender = sender;
     }
-    public String getReceiver() {
+    public String getReceiver() { // Encapsulation
         return receiver;
     }
-    public void setReceiver(String receiver) {
+    public void setReceiver(String receiver) { // Encapsulation
         this.receiver = receiver;
     }
-    public String getContent() {
+    public String getContent() { // Encapsulation
         return content;
     }
-    public void setContent(String content) {
+    public void setContent(String content) { // Encapsulation
         this.content = content;
     }
-    public long getTimestamp() {
+    public long getTimestamp() { // Encapsulation
         return timestamp;
     }
-    public void setTimestamp(long timestamp) {
+    public void setTimestamp(long timestamp) { // Encapsulation
         this.timestamp = timestamp;
     }
 }

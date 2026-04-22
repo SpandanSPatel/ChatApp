@@ -6,10 +6,10 @@ import com.mongodb.client.MongoDatabase;
 
 import io.github.cdimascio.dotenv.Dotenv;
 
-public class MongoService {
+public class MongoService { // Class
 
-    private static MongoClient mongoClient;
-    private static MongoDatabase database;
+    private static MongoClient mongoClient; // Encapsulation
+    private static MongoDatabase database; // Encapsulation
 
     static {
         try {
@@ -19,7 +19,7 @@ public class MongoService {
             String uri = dotenv.get("MONGO_URI");
             String dbName = dotenv.get("DB_NAME");
 
-            mongoClient = MongoClients.create(uri);
+            mongoClient = MongoClients.create(uri); // Object
             database = mongoClient.getDatabase(dbName);
 
             System.out.println("Connected to MongoDB!");
@@ -30,7 +30,7 @@ public class MongoService {
         }
     }
 
-    public static MongoDatabase getDatabase() {
+    public static MongoDatabase getDatabase() { // Abstraction
         return database;
     }
 }

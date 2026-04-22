@@ -10,13 +10,13 @@ import java.util.List;
 
 import javax.swing.*;
 
-public class ChatController {
+public class ChatController { // Class
 
-    private ChatView view;
-    private Client client;
-    private String username;
-    private String receiver = null;
-    private boolean loadingHistory = false;
+    private ChatView view; // Encapsulation
+    private Client client; // Encapsulation
+    private String username; // Encapsulation
+    private String receiver = null; // Encapsulation
+    private boolean loadingHistory = false; // Encapsulation
 
     public ChatController(ChatView view, Client client, String username) {
         this.view = view;
@@ -27,11 +27,11 @@ public class ChatController {
         startListening();
     }
 
-    private void initListeners() {
+    private void initListeners() { // Encapsulation
 
-        view.sendButton.addActionListener(e -> sendMessage());
-        view.messageField.addActionListener(e -> sendMessage());
-        view.userList.addListSelectionListener(e -> {
+        view.sendButton.addActionListener(e -> sendMessage()); // Polymorphism
+        view.messageField.addActionListener(e -> sendMessage()); // Polymorphism
+        view.userList.addListSelectionListener(e -> { // Polymorphism
             if (!e.getValueIsAdjusting()) {
 
                 String selectedUser = view.userList.getSelectedValue();
@@ -45,7 +45,7 @@ public class ChatController {
                     loadingHistory = true;
 
                     try {
-                        Message switchMsg = new Message(
+                        Message switchMsg = new Message( // Object
                                 Constants.SWITCH,
                                 username,
                                 receiver,
@@ -61,7 +61,7 @@ public class ChatController {
         });
     }
 
-    private void sendMessage() {
+    private void sendMessage() { // Abstraction
         if (receiver == null) {
             JOptionPane.showMessageDialog(view, "Select a user first");
             return;
@@ -72,7 +72,7 @@ public class ChatController {
             return;
 
         try {
-            Message msg = new Message(
+            Message msg = new Message( // Object
                     Constants.CHAT,
                     username,
                     receiver,
@@ -90,7 +90,7 @@ public class ChatController {
         }
     }
 
-    private void loadHistory() {
+    private void loadHistory() { // Abstraction
         try {
             while (true) {
                 String json = client.receive();
@@ -99,7 +99,7 @@ public class ChatController {
                     break;
                 }
 
-                Message msg = JsonUtil.fromJson(json, Message.class);
+                Message msg = JsonUtil.fromJson(json, Message.class); // Object
                 SwingUtilities.invokeLater(() -> {
                     view.addMessage(msg.getSender() + ": " + msg.getContent());
                 });
@@ -109,9 +109,9 @@ public class ChatController {
         }
     }
 
-    private void startListening() {
+    private void startListening() { // Abstraction
 
-        new Thread(() -> {
+        new Thread(() -> { // Object, Polymorphism
             try {
                 while (true) {
 
@@ -122,7 +122,7 @@ public class ChatController {
                         continue;
                     }
 
-                    Message msg = JsonUtil.fromJson(json, Message.class);
+                    Message msg = JsonUtil.fromJson(json, Message.class); // Object
                     if (msg.getType().equals("USER_LIST")) {
 
                         List<String> users = JsonUtil.fromJson(

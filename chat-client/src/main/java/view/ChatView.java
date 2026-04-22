@@ -3,7 +3,7 @@ package view;
 import javax.swing.*;
 import java.awt.*;
 
-public class ChatView extends JFrame {
+public class ChatView extends JFrame { // Class, Inheritance
 
     public JTextArea chatArea;
     public JTextField messageField;
@@ -18,26 +18,26 @@ public class ChatView extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 
-        setLayout(new BorderLayout());
+        setLayout(new BorderLayout()); // Object
 
-        userListModel = new DefaultListModel<>();
-        userList = new JList<>(userListModel);
-        JScrollPane userScroll = new JScrollPane(userList);
-        userScroll.setPreferredSize(new Dimension(120, 0));
+        userListModel = new DefaultListModel<>(); // Object
+        userList = new JList<>(userListModel); // Object
+        JScrollPane userScroll = new JScrollPane(userList); // Object
+        userScroll.setPreferredSize(new Dimension(120, 0)); // Object
 
-        chatArea = new JTextArea();
+        chatArea = new JTextArea(); // Object
         chatArea.setEditable(false);
         chatArea.setLineWrap(true);
-        JScrollPane chatScroll = new JScrollPane(chatArea);
+        JScrollPane chatScroll = new JScrollPane(chatArea); // Object
 
-        JPanel bottomPanel = new JPanel(new BorderLayout());
-        messageField = new JTextField();
-        sendButton = new JButton("Send");
+        JPanel bottomPanel = new JPanel(new BorderLayout()); // Object
+        messageField = new JTextField(); // Object
+        sendButton = new JButton("Send"); // Object
 
         bottomPanel.add(messageField, BorderLayout.CENTER);
         bottomPanel.add(sendButton, BorderLayout.EAST);
 
-        JPanel chatPanel = new JPanel(new BorderLayout());
+        JPanel chatPanel = new JPanel(new BorderLayout()); // Object
         chatPanel.add(chatScroll, BorderLayout.CENTER);
         chatPanel.add(bottomPanel, BorderLayout.SOUTH);
 
@@ -47,7 +47,7 @@ public class ChatView extends JFrame {
         setVisible(true);
     }
 
-    public void addMessage(String message) {
+    public void addMessage(String message) { // Abstraction
         chatArea.append(message + "\n");
     }
 }

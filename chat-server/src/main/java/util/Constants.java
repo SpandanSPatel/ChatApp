@@ -1,6 +1,6 @@
 package util;
 
-public class Constants {
+public class Constants { // Class
 
     public static final String CHAT = "CHAT";
     public static final String LOGIN = "LOGIN";

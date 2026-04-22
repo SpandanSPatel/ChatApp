@@ -6,7 +6,7 @@ import io.github.cdimascio.dotenv.Dotenv;
 
 import java.net.ServerSocket;
 
-public class Server {
+public class Server { // Class
 
     public static void main(String[] args) {
 
@@ -20,15 +20,15 @@ public class Server {
 
             System.out.println("Server is Starting");
 
-            ServerSocket serverSocket = new ServerSocket(port);
+            ServerSocket serverSocket = new ServerSocket(port); // Object
 
             System.out.println("Server started on Port: " + port);
             
             while (true) {
-                Socket socket = serverSocket.accept();
+                Socket socket = serverSocket.accept(); // Object
                 System.out.println("New Client connected: " + socket.getInetAddress());
-                ClientHandler handler = new ClientHandler(socket);
-                new Thread(handler).start();
+                ClientHandler handler = new ClientHandler(socket); // Object
+                new Thread(handler).start(); // Object, Polymorphism
             }
 
         } catch (Exception e) {

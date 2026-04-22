@@ -11,10 +11,10 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class AuthController {
+public class AuthController { // Class
 
-    private LoginView view;
-    private Client client;
+    private LoginView view; // Encapsulation
+    private Client client; // Encapsulation
 
     public AuthController(LoginView view, Client client) {
         this.view = view;
@@ -23,13 +23,13 @@ public class AuthController {
         initListeners();
     }
 
-    private void initListeners() {
+    private void initListeners() { // Encapsulation
 
-        view.loginButton.addActionListener(e -> handleAuth(Constants.LOGIN));
-        view.registerButton.addActionListener(e -> handleAuth(Constants.SIGNUP));
+        view.loginButton.addActionListener(e -> handleAuth(Constants.LOGIN)); // Polymorphism
+        view.registerButton.addActionListener(e -> handleAuth(Constants.SIGNUP)); // Polymorphism
     }
 
-    private void handleAuth(String type) {
+    private void handleAuth(String type) { // Abstraction
 
         String username = view.usernameField.getText();
         String password = new String(view.passwordField.getPassword());
@@ -40,7 +40,7 @@ public class AuthController {
         }
 
         try {
-            Message msg = new Message(
+            Message msg = new Message( // Object
                     type,
                     username,
                     "SERVER",
@@ -50,15 +50,15 @@ public class AuthController {
             client.send(JsonUtil.toJson(msg));
 
             String responseJson = client.receive();
-            Message response = JsonUtil.fromJson(responseJson, Message.class);
+            Message response = JsonUtil.fromJson(responseJson, Message.class); // Object
 
             if (response.getContent().equals("SUCCESS")) {
                 JOptionPane.showMessageDialog(view, "Login Successful!");
 
                 view.dispose();
                 SwingUtilities.invokeLater(() -> {
-                    ChatView chatView = new ChatView();
-                    new ChatController(chatView, client, username);
+                    ChatView chatView = new ChatView(); // Object
+                    new ChatController(chatView, client, username); // Object
                 });
 
             } else {

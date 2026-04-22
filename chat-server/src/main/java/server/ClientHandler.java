@@ -11,18 +11,18 @@ import util.*;
 import service.ChatService;
 import service.AuthService;
 
-public class ClientHandler implements Runnable {
+public class ClientHandler implements Runnable { // Class, Polymorphism
 
-    private Socket socket;
-    private String username;
-    private DataOutputStream dos;
+    private Socket socket; // Encapsulation
+    private String username; // Encapsulation
+    private DataOutputStream dos; // Encapsulation
 
     ClientHandler(Socket socket) throws IOException {
         this.socket = socket;
-        this.dos = new DataOutputStream(socket.getOutputStream());
+        this.dos = new DataOutputStream(socket.getOutputStream()); // Object
     }
 
-    public void sendMessage(String json) {
+    public void sendMessage(String json) { // Abstraction
         try {
             dos.writeUTF(json);
         } catch (Exception e) {
@@ -30,22 +30,22 @@ public class ClientHandler implements Runnable {
         }
     }
 
-    public void run() {
+    public void run() { // Polymorphism
         try {
 
-            DataInputStream dis = new DataInputStream(socket.getInputStream());
+            DataInputStream dis = new DataInputStream(socket.getInputStream()); // Object
             while (true) {
 
                 String authJson = dis.readUTF();
 
-                Message authMsg = JsonUtil.fromJson(authJson, Message.class);
+                Message authMsg = JsonUtil.fromJson(authJson, Message.class); // Object
                 String username = authMsg.getSender();
                 String password = authMsg.getContent();
                 String type = authMsg.getType();
 
                 if (username == null || username.trim().isEmpty() || password == null
                         || password.trim().isEmpty()) {
-                    Message response = new Message(Constants.AUTH, "SERVER", "UNKNOWN", "INVALID_INPUT",
+                    Message response = new Message(Constants.AUTH, "SERVER", "UNKNOWN", "INVALID_INPUT", // Object
                             System.currentTimeMillis());
 
                     dos.writeUTF(JsonUtil.toJson(response));
@@ -55,7 +55,7 @@ public class ClientHandler implements Runnable {
 
                 if (type.equals(Constants.LOGIN)) {
                     if (ChatService.getClient(username) != null) {
-                        Message response = new Message(Constants.AUTH, "SERVER", username, "ALREADY_LOGGED_IN",
+                        Message response = new Message(Constants.AUTH, "SERVER", username, "ALREADY_LOGGED_IN", // Object
                                 System.currentTimeMillis());
 
                         dos.writeUTF(JsonUtil.toJson(response));
@@ -66,11 +66,11 @@ public class ClientHandler implements Runnable {
                 boolean success = false;
 
                 if (type.equals(Constants.SIGNUP)) {
-                    success = AuthService.register(new model.User(username, password));
+                    success = AuthService.register(new model.User(username, password)); // Object
                 } else if (type.equals(Constants.LOGIN)) {
                     success = AuthService.login(username, password);
                 }
-                Message response = new Message(Constants.AUTH, "SERVER", username, success ? "SUCCESS" : "FAIL",
+                Message response = new Message(Constants.AUTH, "SERVER", username, success ? "SUCCESS" : "FAIL", // Object
                         System.currentTimeMillis());
 
                 dos.writeUTF(JsonUtil.toJson(response));
@@ -91,7 +91,7 @@ public class ClientHandler implements Runnable {
             while (true) {
                 String json = dis.readUTF();
 
-                Message msg = JsonUtil.fromJson(json, Message.class);
+                Message msg = JsonUtil.fromJson(json, Message.class); // Object
 
                 if (msg.getType().equals("SWITCH")) {
 
@@ -117,7 +117,7 @@ public class ClientHandler implements Runnable {
                 if (receiverHandler != null) {
                     receiverHandler.sendMessage(json);
                 } else {
-                    Message errorMsg = new Message(Constants.CHAT, "SERVER", msg.getSender(),
+                    Message errorMsg = new Message(Constants.CHAT, "SERVER", msg.getSender(), // Object
                             "User not online: " + receiver, System.currentTimeMillis());
 
                     String errorJson = JsonUtil.toJson(errorMsg);
