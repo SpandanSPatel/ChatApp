@@ -108,6 +108,16 @@ public class ClientHandler implements Runnable { // Class, Polymorphism
                     continue;
                 }
 
+                if (msg.getType().equals(Constants.TYPING_START)
+                        || msg.getType().equals(Constants.TYPING_STOP)) {
+
+                    ClientHandler targetHandler = ChatService.getClient(msg.getReceiver());
+                    if (targetHandler != null) {
+                        targetHandler.sendMessage(json);
+                    }
+                    continue;
+                }
+
                 ChatService.saveMessage(msg);
 
                 receiver = msg.getReceiver();

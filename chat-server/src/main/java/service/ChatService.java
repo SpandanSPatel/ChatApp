@@ -4,6 +4,7 @@ import server.ClientHandler;
 import util.JsonUtil;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -79,6 +80,8 @@ public class ChatService { // Class
                     doc.getLong("timestamp"));
             messages.add(msg);
         }
+
+        Collections.reverse(messages);
 
         return messages;
     }

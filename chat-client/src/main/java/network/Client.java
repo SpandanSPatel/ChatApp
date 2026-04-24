@@ -15,6 +15,7 @@ public class Client { // Class
 
     static DataOutputStream dos;
     static DataInputStream dis;
+    private Socket socket; // Encapsulation
 
     public Client() {
         try {
@@ -25,7 +26,7 @@ public class Client { // Class
 
             System.out.println("Connecting to server...");
 
-            Socket socket = new Socket(ip, port); // Object
+            socket = new Socket(ip, port); // Object
 
             System.out.println("Connected to server!!");
             dos = new DataOutputStream(socket.getOutputStream()); // Object
@@ -41,6 +42,14 @@ public class Client { // Class
 
     public String receive() throws Exception { // Abstraction
         return dis.readUTF();
+    }
+
+    public void close() { // Abstraction
+        try {
+            if (socket != null) socket.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 }
